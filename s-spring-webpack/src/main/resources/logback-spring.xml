@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+	<include resource="org/springframework/boot/logging/logback/defaults.xml" />
+	
+	<property resource="application.properties"/>
+	
+	<!-- keep 30 days' worth of history capped at 3GB total size -->
+	<appender name="_LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${config.logger.path}/logs/${spring.application.name}.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${config.logger.path}/logs/${spring.application.name}.%d{yyyy-MM-dd}.log</fileNamePattern>
+			<maxHistory>30</maxHistory>
+			<totalSizeCap>2GB</totalSizeCap>
+		</rollingPolicy>
+		<!--
+		<file>C:/dev/log/${info.app.name}.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>C:/dev/log/${info.app.name}.%d{yyyy-MM-dd}.log</fileNamePattern>
+			<maxHistory>30</maxHistory>
+			<totalSizeCap>3GB</totalSizeCap>
+		</rollingPolicy>
+		-->
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<pattern>[PID:${PID:-}] [%d{yyyy-MM-dd HH:mm:ss.SSS}] [%5p] [%8.8t] [%32.32logger{32}:%4line] : %m%n</pattern>
+		</encoder>
+	</appender>
+	<appender name="_LOG_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>[PID:${PID:-}] [%d{yyyy-MM-dd HH:mm:ss.SSS}] [%5p] [%8.8t] [%32.32logger{32}:%4line] : %m%n</pattern>
+		</encoder>
+	</appender>
+	
+	<logger level="WARN" name="org.springframework" additivity="false">
+		<appender-ref ref="${config.logger.ref}"/>
+	</logger>
+	<logger level="${config.logger.level}" name="seung" additivity="false">
+		<appender-ref ref="${config.logger.ref}"/>
+	</logger>
+	<logger level="${config.logger.level}" name="ift" additivity="false">
+		<appender-ref ref="${config.logger.ref}"/>
+	</logger>
+	
+	<root level="${config.logger.level}">
+		<appender-ref ref="${config.logger.ref}"/>
+	</root>
+	
+</configuration>
